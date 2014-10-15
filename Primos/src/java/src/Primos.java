@@ -10,22 +10,20 @@ package src;
  * @author Usuario
  */
 public class Primos {
-    
-    
-public static boolean esPrimo(int aVerificar){
-    boolean retorno=true;
-        
-    int i =2;
-    
-    while(retorno && i<=Math.sqrt(aVerificar)){
-        if(aVerificar%i==0){
-            retorno=false;
+
+    public static boolean esPrimo(int aVerificar) {
+        boolean retorno = true;
+
+        int i = 2;
+
+        while (retorno && i <= Math.sqrt(aVerificar)) {
+            if (aVerificar % i == 0) {
+                retorno = false;
+            }
+            i++;
         }
-        i++;
+
+        return retorno;
     }
-    
-        
-    return retorno;
-}
-    
+
 }
