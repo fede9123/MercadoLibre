@@ -10,3 +10,12 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/Primos/dist/
+Primos/nbproject/build-impl.xml
+Primos/build/web/WEB-INF/glassfish-web.xml
+Primos/nbproject/build-impl.xml
+Primos/web/WEB-INF/glassfish-web.xml
+Primos/nbproject/project.properties
+Primos/nbproject/private/private.properties
+Primos/nbproject/private/private.properties
+Primos/build/web/WEB-INF/glassfish-web.xml
