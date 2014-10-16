@@ -26,8 +26,11 @@ public class PrimoCircular {
         boolean porAhora = true;
 
         if (aVerificar > 1 && aVerificar <= 2147483647) {
-            /*El 2 es el único número primo par. Lo trato diferente.*/
-            if (aVerificar > 2) {
+            /*El 2 y el 5 los trato diferente para no descartarlo en los métodos
+                contieneCifraPar o  contieneCifraCinco.*/
+            if (aVerificar!= 2
+                && aVerificar!=5) {
+                
                 char[] aVerificarChar = String.valueOf(aVerificar).toCharArray();
                 ArrayList<char[]> rotaciones = new ArrayList();
 
@@ -44,7 +47,7 @@ public class PrimoCircular {
                         /*Verifico que cada rotacion sea número primo*/
                         for (int i = 0; i < rotaciones.size() && porAhora; i++) {
                             int posiblePrimo = Integer.parseInt(String.valueOf(rotaciones.get(i)));
-
+                            
                             /*Si ya he comprado si ese número es primo, evito volver a comprobarlo*/
                             if (!misPrimosConocidos.contains(posiblePrimo)) {
                                 if (Primos.esPrimo(posiblePrimo)) {
@@ -84,7 +87,7 @@ public class PrimoCircular {
     public boolean contieneCifraCinco(char[] aVerificar) {
         boolean retorno = false;
         for (int i = 0; i < aVerificar.length && !retorno; i++) {
-            if (aVerificar[i] == 5) {
+            if (Integer.parseInt(String.valueOf(aVerificar[i])  )== 5) {
                 retorno = true;
             }
         }
