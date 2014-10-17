@@ -10,6 +10,7 @@ package src;
  * @author Usuario
  */
 public class Utilidades {
+    public static final int LIMITE=100000000;
     
     
     public static char[] rotarPalabra(char[] palabraChar){

@@ -4,6 +4,7 @@
     Author     : Usuario
 --%>
 
+<%@page import="src.Utilidades"%>
 <%@page import="java.util.TreeSet"%>
 <%@page import="java.util.Iterator"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -22,34 +23,33 @@
                 && request.getParameter("numero") != null) {
             try {
                 if (Integer.valueOf(request.getParameter("numero")) >= 1
-                     &&   Integer.valueOf(request.getParameter("numero")) <= 1000000) {
+                     &&   Integer.valueOf(request.getParameter("numero")) <= Utilidades.LIMITE) {
 
-                    PrimoCircular primoCircular = new PrimoCircular();
-                    if (primoCircular.esPrimoCircular(Integer.parseInt(request.getParameter("numero")))) {
-                        mensaje = "SI es primo circular.";
-                    } else {
-                        mensaje = "NO es primo circular.";
-                    }
+//                    PrimoCircular primoCircular = new PrimoCircular();
+//                    if (primoCircular.esPrimoCircular(Integer.parseInt(request.getParameter("numero")))) {
+//                        mensaje = "SI es primo circular.";
+//                    } else {
+//                        mensaje = "NO es primo circular.";
+//                    }
 
                 } else {
-                    mensaje = "Ingrese un valor entre 1 y 1000000.";
+                    mensaje = "Ingrese un valor entre 1 y " +Utilidades.LIMITE+ ".";
                 }
             } catch (Exception e) {
                 if (e instanceof NumberFormatException) {
-                    mensaje = "Ingrese un valor entre 1 y 1000000.";
+                    mensaje = "Ingrese un valor entre 1 y " +Utilidades.LIMITE+ ".";
                 } else {
                     mensaje = e.getMessage();
                 }
             }
         }
 
-        int limite = 100000000;
         TreeSet lista = new TreeSet();
         String lista_string = new String();
 
         if (request.getParameter("listar") != null) {
             BuscarPrimosCirculares buscador = new BuscarPrimosCirculares();
-            lista = buscador.listarPrimosCirculares(limite);
+            lista = buscador.listarPrimosCirculares(Utilidades.LIMITE);
             Iterator setIterator = lista.iterator();
             while(setIterator.hasNext()){
                lista_string += setIterator.next() + "<br>";
@@ -79,7 +79,7 @@
                     </td>
                     <%if (request.getParameter("listar") != null) {%>
                     <td style="width: 50%; vertical-align: top">
-                        <h2>Cantidad de número primos circulares menores a <%=limite%> encontrados: <%=lista.size()%></h2>
+                        <h2>Cantidad de número primos circulares menores a <%=Utilidades.LIMITE%> encontrados: <%=lista.size()%></h2>
                         <h2>Lista</h2>
                         <label id="listado"><%=lista_string%></label>
                     </td>
