@@ -14,27 +14,11 @@ import java.util.TreeSet;
  *
  * @author Usuario
  */
-public class PrimoCircular extends Thread {
-
-    private int aVerficar;
-    BuscarPrimosCirculares buscador;
-    public PrimoCircular(int aVerficar, BuscarPrimosCirculares buscador) {
-        this.aVerficar=aVerficar;
-        this.buscador=buscador;
-    }
+public class PrimoCircular{
     
-    @Override
-    public void run() {
-        if(esPrimoCircular(aVerficar)){
-            buscador.getLista().add(aVerficar);
-            char[] aAgregar = String.valueOf(aVerficar).toCharArray();
-                for (int j = 0; j < aAgregar.length; j++) {
-                    buscador.getLista().add(Integer.parseInt(String.valueOf(aAgregar)));
-                    aAgregar = Utilidades.rotarPalabra(aAgregar);
-            }
-        }
-    }
-
+    
+    ArrayList misPrimosConocidos=new ArrayList();
+    
     public boolean esPrimoCircular(int aVerificar) {
         boolean retorno = false;
         boolean porAhora = true;
@@ -63,9 +47,9 @@ public class PrimoCircular extends Thread {
                         for (int i = 0; i < rotaciones.size() && porAhora; i++) {
                             int posiblePrimo = Integer.parseInt(String.valueOf(rotaciones.get(i)));
                             
-                            if (!buscador.getPrimosConocidos().contains(posiblePrimo)) {
+                            if (!misPrimosConocidos.contains(posiblePrimo)) {
                                 if (Primos.esPrimo(posiblePrimo)) {     
-                                    buscador.getPrimosConocidos().add(posiblePrimo);
+                                    misPrimosConocidos.add(posiblePrimo);
                                 } else {
                                     porAhora = false;
                                 }

@@ -28,26 +28,24 @@ public class BuscarPrimosCirculares {
     }
 
     public TreeSet listarPrimosCirculares(int limite) {
-            long startTime = System.currentTimeMillis();
-            
-            lista.add(2);
-            for (int numero = 3; numero <= limite; numero = numero + 2) {
-                if (!lista.contains(numero)) {
-                    PrimoCircular primoCircular = new PrimoCircular(numero , this);
-                    primoCircular.start();
+        long startTime = System.currentTimeMillis();
+        PrimoCircular primoCircular=new PrimoCircular();
+        lista.add(2);
+        for (int numero = 3; numero <= limite; numero = numero + 2) {
+            if (!lista.contains(numero) && primoCircular.esPrimoCircular(numero)) {
+                /*Si es primo circular, lo agrego a el y a sus rotaciones 
+                 para no volver a verificarlas*/
+                char[] aAgregar = String.valueOf(numero).toCharArray();
+                for (int j = 0; j < aAgregar.length; j++) {
+                    lista.add(Integer.parseInt(String.valueOf(aAgregar)));
+                    aAgregar = Utilidades.rotarPalabra(aAgregar);
                 }
-    //                /*Si es primo circular, lo agrego a el y a sus rotaciones 
-    //                 para no volver a verificarlas*/
-    //                char[] aAgregar = String.valueOf(numero).toCharArray();
-    //                for (int j = 0; j < aAgregar.length; j++) {
-    //                    lista.add(Integer.parseInt(String.valueOf(aAgregar)));
-    //                    aAgregar = Utilidades.rotarPalabra(aAgregar);
-    //            }
             }
-            long stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            System.out.println("Demora "+elapsedTime);
-            return lista;
+        }
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println("Demora " + elapsedTime);
+        return lista;
     }
 
 }
