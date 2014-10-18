@@ -7,8 +7,6 @@ package src;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -16,36 +14,40 @@ import java.util.logging.Logger;
  */
 public class BuscarPrimosCirculares {
 
-    private TreeSet primosConocidos = new TreeSet();
-    private TreeSet lista = new TreeSet();
+    private TreeSet noCircularesConocidos = new TreeSet();
+    private TreeSet circularesConocidos = new TreeSet();
 
-    public synchronized TreeSet getPrimosConocidos() {
-        return primosConocidos;
-    }
-
-    public synchronized TreeSet getLista() {
-        return lista;
-    }
-
-    public TreeSet listarPrimosCirculares(int limite) {
-        long startTime = System.currentTimeMillis();
-        PrimoCircular primoCircular=new PrimoCircular();
-        lista.add(2);
-        for (int numero = 3; numero <= limite; numero = numero + 2) {
-            if (!lista.contains(numero) && primoCircular.esPrimoCircular(numero)) {
-                /*Si es primo circular, lo agrego a el y a sus rotaciones 
-                 para no volver a verificarlas*/
-                char[] aAgregar = String.valueOf(numero).toCharArray();
-                for (int j = 0; j < aAgregar.length; j++) {
-                    lista.add(Integer.parseInt(String.valueOf(aAgregar)));
-                    aAgregar = Utilidades.rotarPalabra(aAgregar);
+    public TreeSet listarPrimosCirculares() {
+        long tiempoInicio = System.currentTimeMillis();
+        
+        PrimoCircular primoCircular = new PrimoCircular();
+        circularesConocidos.add(2);
+        /*Incremento de a 2, para evitar comprobar números que terminen en numeros pares
+         ya que estos no son primos.*/
+        for (int numero = 3; numero <= Utilidades.LIMITE; numero = numero + 2) {
+            /*Verifico que el número no haya sido verificado previamente, ya que
+             puede haber sido comprobada una de sus rotaciones mennores al mismo.*/
+            if (!circularesConocidos.contains(numero) && !noCircularesConocidos.contains(numero)) {
+                
+                ArrayList rotacionesAAgregar = new ArrayList(Utilidades.rotarNumero(numero));
+                
+                if (primoCircular.esPrimoCircular(numero)) {
+                    /*Agrego al número y a sus rotaciones a la lista correspondiente
+                     según sean o no primos circulares.
+                     Para no volver a verificarlos*/
+                    for (int i = 0; i < rotacionesAAgregar.size(); i++) {
+                        circularesConocidos.add(rotacionesAAgregar.get(i));
+                    }
+                } else {
+                    for (int i = 0; i < rotacionesAAgregar.size(); i++) {
+                        noCircularesConocidos.add(rotacionesAAgregar.get(i));
+                    }
                 }
             }
         }
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.out.println("Demora " + elapsedTime);
-        return lista;
+        long tiempoFin = System.currentTimeMillis();
+        long tiempoDeEjecucion = tiempoFin - tiempoInicio;
+        System.out.println("Demora " + tiempoDeEjecucion);
+        return circularesConocidos;
     }
-
 }

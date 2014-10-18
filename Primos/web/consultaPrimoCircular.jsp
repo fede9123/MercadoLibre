@@ -25,12 +25,12 @@
                 if (Integer.valueOf(request.getParameter("numero")) >= 1
                      &&   Integer.valueOf(request.getParameter("numero")) <= Utilidades.LIMITE) {
 
-//                    PrimoCircular primoCircular = new PrimoCircular();
-//                    if (primoCircular.esPrimoCircular(Integer.parseInt(request.getParameter("numero")))) {
-//                        mensaje = "SI es primo circular.";
-//                    } else {
-//                        mensaje = "NO es primo circular.";
-//                    }
+                    PrimoCircular primoCircular = new PrimoCircular();
+                    if (primoCircular.esPrimoCircular(Integer.parseInt(request.getParameter("numero")))) {
+                        mensaje = "SI es primo circular.";
+                    } else {
+                        mensaje = "NO es primo circular.";
+                    }
 
                 } else {
                     mensaje = "Ingrese un valor entre 1 y " +Utilidades.LIMITE+ ".";
@@ -49,11 +49,10 @@
 
         if (request.getParameter("listar") != null) {
             BuscarPrimosCirculares buscador = new BuscarPrimosCirculares();
-            lista = buscador.listarPrimosCirculares(Utilidades.LIMITE);
+            lista = buscador.listarPrimosCirculares();
             Iterator setIterator = lista.iterator();
             while(setIterator.hasNext()){
                lista_string += setIterator.next() + "<br>";
-//               setIterator.remove(); //removes current element
             }
         }
     %>

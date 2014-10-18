@@ -5,14 +5,40 @@
  */
 package src;
 
+import java.util.concurrent.Callable;
+
 /**
  *
  * @author Usuario
  */
-public class Primos {
+public class Primos implements Callable<Integer> {
+
+    private int aVerificar;
+
+    public Primos(int aVerificar) {
+        this.aVerificar = aVerificar;
+    }
+
+    @Override
+    public Integer call() {
+        System.out.println("Verifico " + aVerificar);
+        boolean esPrimo = true;
+        int i = 2;
+        while (esPrimo && i <= Math.sqrt(aVerificar)) {
+            if (aVerificar % i == 0) {
+                esPrimo = false;
+            }
+            i++;
+        }
+        if (esPrimo) {
+            return aVerificar;
+        } else {
+            return 0;
+        }
+    }
 
     public static boolean esPrimo(int aVerificar) {
-        System.out.println("Verifico "+ aVerificar);
+        System.out.println("Verifico " + aVerificar);
         boolean retorno = true;
         int i = 2;
         while (retorno && i <= Math.sqrt(aVerificar)) {
@@ -21,8 +47,6 @@ public class Primos {
             }
             i++;
         }
-
         return retorno;
     }
-
 }

@@ -6,19 +6,25 @@
 package src;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Usuario
  */
-public class PrimoCircular{
-    
-    
-    ArrayList misPrimosConocidos=new ArrayList();
-    
+public class PrimoCircular {
+
+    ArrayList misPrimosConocidos = new ArrayList();
+    ArrayList listaPendientes = new ArrayList();
+
     public boolean esPrimoCircular(int aVerificar) {
         boolean retorno = false;
         boolean porAhora = true;
@@ -28,33 +34,45 @@ public class PrimoCircular{
              contieneCifraPar o  contieneCifraCinco.*/
             if (aVerificar != 2
                     && aVerificar != 5) {
-
-                char[] aVerificarChar = String.valueOf(aVerificar).toCharArray();
-                ArrayList<char[]> rotaciones = new ArrayList();
-
+                /*Busco todas las rotaciones del número a verificar*/
+                ArrayList rotaciones = Utilidades.rotarNumero(aVerificar);
                 /*Si contiene alguna cifra par, ya no es primo circular, evito verificaciones*/
-                if (!contieneCifraPar(aVerificarChar)) {
+                if (!contieneCifraPar(aVerificar)) {
                     /*Si contiene alguna cifra 5, ya no es primo circular, evito verificaciones*/
-                    if (!contieneCifraCinco(aVerificarChar)) {
+                    if (!contieneCifraCinco(aVerificar)) {
                         /*Busco todas las rotaciones del número a verificar*/
-                        for (int i = 0; i < aVerificarChar.length; i++) {
-                            if (!rotaciones.contains(aVerificarChar)) {
-                                rotaciones.add(aVerificarChar);
+                        for (int i = 0; i < rotaciones.size(); i++) {
+                            if (!misPrimosConocidos.contains(rotaciones.get(i))) {
+                                listaPendientes.add(rotaciones.get(i));
                             }
-                            aVerificarChar = Utilidades.rotarPalabra(aVerificarChar);
                         }
-                        /*Verifico que cada rotacion sea número primo*/
-                        for (int i = 0; i < rotaciones.size() && porAhora; i++) {
-                            int posiblePrimo = Integer.parseInt(String.valueOf(rotaciones.get(i)));
-                            
-                            if (!misPrimosConocidos.contains(posiblePrimo)) {
-                                if (Primos.esPrimo(posiblePrimo)) {     
-                                    misPrimosConocidos.add(posiblePrimo);
-                                } else {
+                        /*Creo la lista de hilos a correr en paralelo*/
+                        Collection<Callable<Integer>> hilos = new ArrayList(listaPendientes.size());
+                        for (int i = 0; i < listaPendientes.size(); i++) {
+                            hilos.add(new Primos((int) listaPendientes.get(i)));
+                        }
+                        ExecutorService ejecutor = new ScheduledThreadPoolExecutor(Utilidades.THREADS_POOL);
+                        // Ejecuto todos los hilos y espero por sus resultados.
+                        List<Future<Integer>> results = null;
+                        try {
+                            System.out.println("Largo a correr " + hilos.size() + " hilos.");
+                            results = ejecutor.invokeAll(hilos);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(PrimoCircular.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        for (Future<Integer> future : results) {
+                            try {
+                                if (future.get() == 0) {
                                     porAhora = false;
+                                } else {
+                                    misPrimosConocidos.add(future.get().intValue());
                                 }
+                            } catch (InterruptedException | ExecutionException ex) {
+                                Logger.getLogger(PrimoCircular.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
+                        listaPendientes.clear();
+                        ejecutor.shutdown();
                     } else {
                         porAhora = false;
                     }
@@ -72,20 +90,22 @@ public class PrimoCircular{
         return retorno;
     }
 
-    public boolean contieneCifraPar(char[] aVerificar) {
+    public boolean contieneCifraPar(int aVerificar) {
+        char[] palabraChar = String.valueOf(aVerificar).toCharArray();
         boolean retorno = false;
-        for (int i = 0; i < aVerificar.length && !retorno; i++) {
-            if (aVerificar[i] % 2 == 0) {
+        for (int i = 0; i < palabraChar.length && !retorno; i++) {
+            if (palabraChar[i] % 2 == 0) {
                 retorno = true;
             }
         }
         return retorno;
     }
 
-    public boolean contieneCifraCinco(char[] aVerificar) {
+    public boolean contieneCifraCinco(int aVerificar) {
+        char[] palabraChar = String.valueOf(aVerificar).toCharArray();
         boolean retorno = false;
-        for (int i = 0; i < aVerificar.length && !retorno; i++) {
-            if (Integer.parseInt(String.valueOf(aVerificar[i])) == 5) {
+        for (int i = 0; i < palabraChar.length && !retorno; i++) {
+            if (Integer.parseInt(String.valueOf(palabraChar[i])) == 5) {
                 retorno = true;
             }
         }
